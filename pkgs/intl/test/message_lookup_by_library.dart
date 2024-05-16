@@ -24,6 +24,32 @@ void main() {
         lookup.lookupMessage('Hello', 'pt', 'greeting', null, null);
     expect(lookupMessage2, 'Bom dia');
   });
+
+  test('Add more message to exist locale', () {
+    final CompositeMessageLookup lookup = CompositeMessageLookup();
+    final lookupMessage =
+        lookup.lookupMessage('Hello', 'pt', 'greeting', null, null);
+    expect(lookupMessage, 'Hello');
+
+    lookup.addLocale(
+      'pt',
+      (locale) =>
+          TestMessageLookupByLibrary('pt', {'greeting': () => 'Bom dia'}),
+    );
+
+    final lookupMessage2 =
+        lookup.lookupMessage('Hello', 'pt', 'greeting', null, null);
+    expect(lookupMessage2, 'Bom dia');
+
+    lookup.addLocale(
+      'pt',
+      (locale) => TestMessageLookupByLibrary('pt', {'world': () => 'mundo'}),
+    );
+
+    final lookupMessage3 =
+        lookup.lookupMessage('Hello', 'pt', 'world', null, null);
+    expect(lookupMessage3, 'mundo');
+  });
 }
 
 class TestMessageLookupByLibrary extends MessageLookupByLibrary {
